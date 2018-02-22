@@ -8,7 +8,7 @@ all:
 	@echo "Invalid use of make, please use one of the given options"
 
 install:
-	install -m 557 btccheck.py $(BINDIR)/btccheck
+	install -m 557 btccheck.py $(BINDIR)/cryptocheck
 
 uninstall:
-	rm -f $(BINDIR)/btccheck
+	rm -f $(BINDIR)/cryptocheck

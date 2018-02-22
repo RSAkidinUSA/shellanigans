@@ -6,7 +6,7 @@ Makefile:
 	Use "make install" to install all scripts
 	Check the script section in this readme to see more about the script
 
-btccheck.py
+cryptocheck.py
 	Checks the current price of bitcoin for you!
 
 	*TODO*
