@@ -1,5 +1,5 @@
 BINDIR = /usr/bin
-scripts := mixup dummy
+scripts := $(patsubst %/,%,$(wildcard */))
 install-scripts := $(foreach script,$(scripts), install-$(script))
 uninstall-scripts := $(foreach script,$(scripts), uninstall-$(script))
 .PHONY: all
@@ -12,17 +12,17 @@ all:
 install: $(install-scripts)
 	@echo "Installed:\n" $(install-scripts)
 
-install-mixup:
-	install -m 557 name-mixup.sh $(BINDIR)/iamwho
-
-install-dummy:
-	@echo "This is a dummy install option for documentation sake"
+$(install-scripts):
+	@echo "Installing: " $@
+	$(eval cur-dir=$(subst install-,,$@))
+	$(MAKE) -C $(cur-dir) install
+	@echo 
 
 uninstall: $(uninstall-scripts)
 	@echo "Removed:\n" $(uninstall-scripts)
 
-uninstall-mixup:
-	rm -f $(BINDIR)/iamwho
-
-uninstall-dummy:
-	@echo "This is a dummy uninstall option for documentation sake"
+$(uninstall-scripts):
+	@echo "Removing: " $@
+	$(eval cur-dir=$(subst uninstall-,,$@))
+	$(MAKE) -C $(cur-dir) uninstall
+	@echo 
