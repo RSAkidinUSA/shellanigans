@@ -9,7 +9,7 @@ def __main__():
 	data = r.json()
 	price = float(data['bids'][0][0])
 	# probably should seed this better
-	random.seed(int(time.clock))
+	random.seed(int(time.time() * 100))
 	guess_dollar = random.randint(0,20000)
 	guess_cents = random.randint(0,100)
 
