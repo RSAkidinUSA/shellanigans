@@ -77,7 +77,7 @@ def __main__():
 		guess = _guess_price(minPrice, maxPrice)
 		numGuesses = numGuesses + 1
 		
-		if (price != None):
+		if (price != None and price > minPrice and price < maxPrice):
 			found = (str('%.2f' % (guess,)) == str('%.2f' % (price,)))
 			print("The current exchange of %s is%s: %s%.2f" % \
 				(exchange_symbol, "" if found else " not", region_symbol, guess))
@@ -88,8 +88,11 @@ def __main__():
 				minPrice = guess
 			else:
 				maxPrice = guess
-		else:
+		elif (price == None):
 			print("That combination is not currently available for comparison")
+			break
+		else:
+			print("Sorry, %s is not within the provided price range" % (exchange_symbol,))
 			break
 
 if __name__ == '__main__':
