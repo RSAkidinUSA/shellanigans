@@ -11,7 +11,8 @@ cryptocheck.py:
 Checks the current price of bitcoin for you, using a similar strategy to that of [bogosort](https://en.wikipedia.org/wiki/Bogosort)
 
 ```
-usage: cryptocheck.py [-h] [-c {BTC,LTC,ETH,BCH}] [-r {EU,UK,US}]
+usage: cryptocheck.py [-h] [-c {BTC,LTC,ETH,BCH}] [-r {US,EU,UK}]
+                      [--guess-again]
 
 Determine crypto currency exchange rate following a bogosort approach!
 
@@ -19,6 +20,7 @@ optional arguments:
   -h, --help            show this help message and exit
   -c {BTC,LTC,ETH,BCH}, --crypto {BTC,LTC,ETH,BCH}
                         Crypto currency to be exchanged
-  -r {EU,UK,US}, --region {EU,UK,US}
-                    	Region of exchange
+  -r {US,EU,UK}, --region {US,EU,UK}
+                        Region of exchange
+  --guess-again         Keep running until the correct price is guessed
 ```	
