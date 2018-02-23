@@ -1,5 +1,5 @@
 CC = gcc
-SRC := inc.c test.c
+SRC := inc.c
 BIN = inc
 .PHONY: clean
 
