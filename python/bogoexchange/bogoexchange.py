@@ -46,6 +46,17 @@ def _guess_price(minPrice=0, maxPrice=20000.00):
 
 	return float(guess_dollar) + (float(guess_cents) / 100.00)
 
+class BAction(argparse.Action):
+    def __call__(self, parser, args, values, option_string=None):
+        # print 'values: {v!r}'.format(v=values)
+        if values==None:
+            values='1'
+        try:
+            values=int(values)
+        except ValueError:
+            values=values.count('b')+1
+        setattr(args, self.dest, values)
+
 def _parse_args():
 	parser = argparse.ArgumentParser(description='Determine crypto currency exchange rate '\
 									'following a bogosort approach!')
@@ -55,6 +66,8 @@ def _parse_args():
 	                    help='Region of exchange')
 	parser.add_argument('--guess-again', action='store_true', dest='guess_again',
 						help='Keep running until the correct price is guessed')
+	parser.add_argument('-b', nargs='?', action=BAction, dest='bound',
+						help='Bound the bogo algorithm: -b: minor bounding, -bb: major bounding')
 
 	return parser.parse_args()
 
