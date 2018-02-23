@@ -7,8 +7,6 @@ Makefile:
 	Check the script section in this readme to see more about the script
 
 cryptocheck.py
-	Checks the current price of bitcoin for you!
+	Checks the current price of bitcoin for you, using a similar strategy to that of [bogosort](https://en.wikipedia.org/wiki/Bogosort)
 
-	*TODO*
-	Add other crypto currencies
-	Add arguments such as range
+		
