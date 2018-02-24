@@ -9,7 +9,8 @@ Makefile:
 
 bogoexchange.py:
 Checks the current price of bitcoin for you, using a similar strategy to that of [bogosort](https://en.wikipedia.org/wiki/Bogosort)
-Version: 1.0
+
+version: 1.0
 
 ```
 usage: bogoexchange.py [-h] [-c {BTC,LTC,ETH,BCH}] [-r {US,EU,UK}]
