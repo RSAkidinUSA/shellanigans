@@ -7,12 +7,13 @@ Makefile:
 - Use "make install" to install all scripts
 - Check the script section in this readme to see more about the script
 
-cryptocheck.py:
+bogoexchange.py:
 Checks the current price of bitcoin for you, using a similar strategy to that of [bogosort](https://en.wikipedia.org/wiki/Bogosort)
+Version: 1.0
 
 ```
-usage: bogoexchange [-h] [-c {BTC,LTC,ETH,BCH}] [-r {US,EU,UK}]
-                    [--guess-again] [-b]
+usage: bogoexchange.py [-h] [-c {BTC,LTC,ETH,BCH}] [-r {US,EU,UK}]
+                       [--guess-again] [-b] [--version]
 
 Determine crypto currency exchange rate following a bogosort approach!
 
@@ -27,4 +28,5 @@ optional arguments:
                         slightly more bounding -bbb: Arguably too much
                         bounding (Warning, this will reduce the bogoness of
                         this program... you don't want to do that, do you?
+  --version             show program's version number and exit
 ```	

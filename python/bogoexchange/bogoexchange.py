@@ -45,6 +45,7 @@ def _parse_args():
 						'-bbb: Arguably too much bounding\n'\
 						'(Warning, this will reduce the bogoness of this program... you don\'t '\
 						'want to do that, do you?')
+	parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
 	return parser.parse_args()
 
