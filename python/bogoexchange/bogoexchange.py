@@ -74,8 +74,10 @@ class priceCheck:
 	# False indicates no rerun needed, True means run again
 	def _update(self, guess):
 		retval = False
+		if (self.__bound == None):
+			return False
 		# Basic bounding
-		if (self.__bound > 0 and self.__bound < 3):
+		elif (self.__bound < 3):
 			tempMin = self.__minPrice
 			self.__minPrice = self.__minPrice + (self.__lowerBoundInc * pow(10, self.__bound - 1))
 			tempMax = self.__maxPrice
