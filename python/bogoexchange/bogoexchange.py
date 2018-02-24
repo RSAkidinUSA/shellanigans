@@ -28,20 +28,7 @@ def _get_price(crypto='BTC', region='US'):
 	except:
 		return (None, exchange_symbol, region_symbol)
 
-'''
-# Class for bounding argument of argparse
-class BAction(argparse.Action):
-    def __call__(self, parser, args, values, option_string=None):
-        # print 'values: {v!r}'.format(v=values)
-        if values==None:
-            values='1'
-        try:
-            values=int(values)
-        except ValueError:
-            values=values.count('b')+1
-        setattr(args, self.dest, values)
-'''
-
+# Parse the command line arguments and return them
 def _parse_args():
 	parser = argparse.ArgumentParser(description='Determine crypto currency exchange rate '\
 									'following a bogosort approach!')
@@ -52,7 +39,10 @@ def _parse_args():
 	parser.add_argument('--guess-again', action='store_true', dest='guess_again',
 						help='Keep running until the correct price is guessed')
 	parser.add_argument('-b', action='count', dest='bound',
-						help='Bound the bogo algorithm: -b: minor bounding, -bb: major bounding '\
+						help='Bound the bogo algorithm: '\
+						'-b: minor bounding\n'\
+						'-bb: slightly more bounding\n'\
+						'-bbb: Arguably too much bounding\n'\
 						'(Warning, this will reduce the bogoness of this program... you don\'t '\
 						'want to do that, do you?')
 
@@ -73,22 +63,42 @@ class priceCheck:
 	def __init__(self, minPrice=0.00, maxPrice=20000.00, bound=0, actual=0.00):
 		self.__minPrice=minPrice
 		self.__maxPrice=maxPrice
-		self.__upperBoundDec=int((maxPrice-actual)/10)
-		self.__lowerBoundInc=int((actual-minPrice)/10)
+		self.__upperBoundDec=int((maxPrice-actual)/1000)
+		self.__lowerBoundInc=int((actual-minPrice)/1000)
 		self.__bound=bound
 		self.__price=actual
 
 	# Update the range after a guess
+	# Return if update was successful or if needs to be redone
+	# False indicates no rerun needed, True means run again
 	def _update(self, guess):
-		if (self.__boundingLevel == 1):
-			# Do something
-			self.__minPrice = self.__minPrice + self.__lowerBoundInc
-			self.__maxPrice = self.__maxPrice - self.__upperBoundDec
-		elif (self.__bound == 2):
+		retval = False
+		# Basic bounding
+		if (self.__bound > 0 and self.__bound < 3):
+			tempMin = self.__minPrice
+			self.__minPrice = self.__minPrice + (self.__lowerBoundInc * pow(10, self.__bound - 1))
+			tempMax = self.__maxPrice
+			self.__maxPrice = self.__maxPrice - (self.__upperBoundDec * pow(10, self.__bound - 1))
+			# Reduce bounding range as we get closer to
+			if (self.valid() == -1):
+				self.__lowerBoundInc = self.__lowerBoundInc / 2
+				retval = True
+
+			if (self.valid() == 1):
+				self.__upperBoundDec = self.__upperBoundDec / 2
+				retval = True
+
+			if (retval):
+				self.__minPrice = tempMin
+				self.__maxPrice = tempMax
+
+		elif (self.__bound >= 3):
 			if (guess < self.__price):
 				self.__minPrice = guess
 			else:
 				self.__maxPrice = guess
+		return retval
+
 
 	# Check if a given price less than greater than or equal
 	# Return 1 if greater, 0 if equal, -1 if less
@@ -100,19 +110,28 @@ class priceCheck:
 			ret = -1
 		else:
 			ret = 1
-		self._update(guess)
+		while(self._update(guess)):
+			pass
 		return ret
 
 	# Check if the given price is in the range
-	# return True if valid, False if not
+	# return 1 if price above range, 0 if in range, -1 below range
 	def valid(self):
-		return True if (self.__price < self.__maxPrice and \
-						self.__price > self.__minPrice) else False
+		# check for equal values to prevent infinite loops
+		retMin = (str('%.2f' % (self.__minPrice,)) == str('%.2f' % (self.__price,)))
+		retMax = (str('%.2f' % (self.__maxPrice,)) == str('%.2f' % (self.__price,)))
+		if (self.__price > self.__maxPrice and retMax == False):
+			return 1
+		elif (self.__price < self.__minPrice and retMin == False):
+			return -1
+		else:
+			return 0
 
 	# Generate a guess for the price of the exchange
 	def guess_price(self):
 		# guess a dollar range within the given range
-		guess_dollar = random.randint(int(self.__minPrice),int(self.__maxPrice))
+		guess_dollar = random.randint(int(self.__minPrice),int(self.__maxPrice)) if \
+							(int(self.__minPrice) != int(self.__maxPrice)) else self.__maxPrice
 
 		# if same dollar amount, set the max cent value at the max
 		maxCents = self._get_cent_diff('max') if guess_dollar == int(self.__maxPrice) else 100
@@ -136,7 +155,8 @@ class priceCheck:
 
 	# Print the current range (Debuggin purposes)
 	def __repr__(self):
-		return "<PriceRange: %.2f - %.2f>" % (self.__minPrice, self.__maxPrice)
+		return "<PriceRange: %.2f - %.2f>\n<Price: %.2f>"\
+				% (self.__minPrice, self.__maxPrice, self.__price)
 
 
 # main, you know, the function that always runs!
@@ -162,16 +182,16 @@ def __main__():
 		guess = PR.guess_price()
 		numGuesses = numGuesses + 1
 		
-		if (PR.valid()):
+		if (PR.valid() == 0):
 			found = PR.check(guess)
 			print("The current exchange of %s is%s: %s%.2f" % \
 				(exchange_symbol, " not" if found else "", region_symbol, guess))
 			if (found == 0):
 				print("This program took %d guesses to determine the exchange rate!" % (numGuesses,))
-				break
+				exit(0)
 		else:
 			print("Sorry, %s is not within the provided price range" % (exchange_symbol,))
-			break
+			exit(1)
 
 if __name__ == '__main__':
 	__main__()
