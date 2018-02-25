@@ -17,8 +17,8 @@ get_type () {
 		fi
 	done
 	if [[ $newProg == true ]]; then
+		echo "Make new directory for" $program_type "programs?"
 		while ( true ); do
-			echo "Make new directory for" $program_type "programs?"
 			read resp
 			if [ ${resp,,} == 'y' ] ||  [ ${resp,,} == 'yes' ]; then
 				mkdir $program_type
@@ -26,7 +26,7 @@ get_type () {
 			elif [ ${resp,,} == 'n' ] || [ ${resp,,} == 'no' ]; then
 				return 1
 			else
-				echo ${resp,,} 'is not a valid response please select from (yes,y,no,n)'
+				echo ${resp,,} 'is not a valid response. Please select from (yes,y,no,n):'
 				continue
 			fi
 		done
