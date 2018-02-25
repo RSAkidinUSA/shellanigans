@@ -1,4 +1,39 @@
 #!/bin/bash
+# Function for getting language of program
+program_type=''
+
+get_type () {
+	echo "Please enter the type of program you would like to add"
+	echo "Existing options are:"
+	for existing in $(find . -maxdepth 1 -type d | cut -d / -f 2 | grep -v '\.'); do
+		echo '-' $existing
+	done
+	read program_type
+	newProg=true
+	for existing in $(find . -maxdepth 1 -type d | cut -d / -f 2 | grep -v '\.'); do
+		if [ "$existing" == "$program_type" ]; then
+			newProg=false
+			break
+		fi
+	done
+	if [[ $newProg == true ]]; then
+		while ( true ); do
+			echo "Make new directory for" $program_type "programs?"
+			read resp
+			if [ ${resp,,} == 'y' ] ||  [ ${resp,,} == 'yes' ]; then
+				mkdir $program_type
+				break
+			elif [ ${resp,,} == 'n' ] || [ ${resp,,} == 'no' ]; then
+				return 1
+			else
+				echo ${resp,,} 'is not a valid response please select from (yes,y,no,n)'
+				continue
+			fi
+		done
+	fi
+	return 0
+}
+
 # Check if user has Github ssh access
 ssh -T git@github.com &> .ssh_auth
 if [[ $? == 255 ]]; then
@@ -20,23 +55,10 @@ else
 		fi
 	done
 	# Get the the type of program
-	echo "Please enter the type of program you would like to add"
-	echo "Existing options are:"
-	for existing in $(find . -maxdepth 1 -type d | cut -d / -f 2 | grep -v '\.'); do
-		echo '-' $existing
+	get_type
+	while [ $? -ne 0 ]; do
+		get_type
 	done
-	read program_type
-	newProg=true
-	for existing in $(find . -maxdepth 1 -type d | cut -d / -f 2 | grep -v '\.'); do
-		if [ "$existing" == "$program_type" ]; then
-			newProg=false
-			break
-		fi
-	done
-	if [[ $newProg == true ]]; then
-		echo "Make new directory for" $program_type "programs?"
-		read resp
-	fi
 	# Get the name of the program
 
 	if [[ $COLLAB == true ]]; then
