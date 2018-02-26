@@ -13,8 +13,8 @@ Checks the current price of bitcoin for you, using a similar strategy to that of
 version: 1.0
 
 ```
-usage: bogoexchange.py [-h] [-c {BTC,LTC,ETH,BCH}] [-r {US,EU,UK}]
-                       [--guess-again] [-b] [--version]
+usage: bogoexchange [-h] [-c {BTC,LTC,ETH,BCH}] [-r {US,EU,UK}]
+                    [--guess-again] [--nodelay] [-b] [--version]
 
 Determine crypto currency exchange rate following a bogosort approach!
 
@@ -25,6 +25,8 @@ optional arguments:
   -r {US,EU,UK}, --region {US,EU,UK}
                         Region of exchange
   --guess-again         Keep running until the correct price is guessed
+  --nodelay             Do not delay in between printing out the next guess at
+                        the exchange rate.
   -b                    Bound the bogo algorithm: -b: minor bounding -bb:
                         slightly more bounding -bbb: Arguably too much
                         bounding (Warning, this will reduce the bogoness of
