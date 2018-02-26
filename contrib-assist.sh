@@ -181,7 +181,7 @@ main () {
 		echo "Make any changes you want, commit them with good messages!"
 		echo "Don't forget to push those changes too!"
 		echo "When you're ready to get your changes added, head to" $GIT_REPO "and make a pull request!"
-		echo "For more help with git, checkout the git_help.md!"\
+		echo "For more help with git, checkout the git_help.md!"
 	fi
 }
 
