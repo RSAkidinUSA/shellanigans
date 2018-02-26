@@ -181,6 +181,8 @@ main () {
 			done
 			GIT_REPO="https://github.com/RSAkidinUSA/shellanigans"
 		else
+			# TODO
+			break
 			# do a fork
 			# check if this already a fork...
 			git remote rename origin upstream
