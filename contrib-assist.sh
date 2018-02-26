@@ -10,6 +10,16 @@ setup_ssh () {
 	# Add option to automate this
 	echo "It's very easy, just head over to https://help.github.com/articles/checking-for-existing-ssh-keys/"
 	echo "Followed by https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/"
+	# echo "Generating ssh keys for you..."
+	# ssh-keygen -t rsa -b 4096 -C $EMAIL -f ~/.ssh/id_rsa_github -N '' -q
+	# eval $(ssh-agent -s)
+	# ssh-add ~/.ssh/id_rsa_github
+	# echo "Please copy and paste the following key into your github ssh keys"
+	# echo "(https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/):"
+	# echo
+	# cat ~/.ssh/id_rsa_github.pub
+	# echo
+
 	echo "Then https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/"
 	echo "Finally https://help.github.com/articles/testing-your-ssh-connection/"
 }
@@ -172,7 +182,10 @@ main () {
 			GIT_REPO="https://github.com/RSAkidinUSA/shellanigans"
 		else
 			# do a fork
-			git fork
+			# check if this already a fork...
+			git remote rename origin upstream
+			git remote set-url upstream 'git@github.com:'RSAkidinUSA'/shellanigans.git'
+			git remote add origin 'git@github.com:'$ID'/shellanigans.git'
 			GIT_REPO="https://github.com/"$ID"/shellanigans"
 		fi
 
