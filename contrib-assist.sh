@@ -23,7 +23,7 @@ manage_make () {
 manage_readme () {
 	ls README.md > /dev/null &> /dev/null
 	if [[ $? == 2 ]]; then
-		echo "#$1" > README.md
+		echo "# $1" > README.md
 		"${EDITOR:-vi}" README.md
 	fi
 }
@@ -151,7 +151,7 @@ main () {
 		if [[ $COLLAB == true ]]; then
 			# do a branch
 			git checkout -b $program_name
-			git add ../$program_name
+			git add ../$program_name ../../$program_type
 			git commit -m "Initial commit for branch $program_name"
 		else
 			# do a fork
