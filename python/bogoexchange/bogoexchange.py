@@ -15,6 +15,10 @@ region_dict = { 'US' : {'symbol' : '$', 'string' : 'USD'}, \
 				'UK' : {'symbol' : '£', 'string' : 'GBP'}, \
 				'EU' : {'symbol' : '€', 'string' : 'EUR'} }
 
+RED_TEXT 	= "\x1b[1;31;40m"
+GREEN_TEXT	= "\x1b[1;32;40m"
+END_COLOR	= "\x1b[0m"
+
 def _get_price(crypto='BTC', region='US'):
 	# determine exchange symbol for currency and region
 	exchange_symbol = crypto + '-' + region_dict[region]['string']
@@ -38,6 +42,8 @@ def _parse_args():
 	                    help='Region of exchange')
 	parser.add_argument('--guess-again', action='store_true', dest='guess_again',
 						help='Keep running until the correct price is guessed')
+	parser.add_argument('--nodelay', action='store_true', help='Do not delay in between printing out '\
+						'the next guess at the exchange rate.')
 	parser.add_argument('-b', action='count', dest='bound',
 						help='Bound the bogo algorithm: '\
 						'-b: minor bounding\n'\
@@ -46,6 +52,7 @@ def _parse_args():
 						'(Warning, this will reduce the bogoness of this program... you don\'t '\
 						'want to do that, do you?')
 	parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+
 
 	return parser.parse_args()
 
@@ -187,11 +194,19 @@ def __main__():
 		
 		if (PR.valid() == 0):
 			found = PR.check(guess)
-			print("The current exchange of %s is%s: %s%.2f" % \
-				(exchange_symbol, " not" if found else "", region_symbol, guess))
+			print("%sThe current exchange of %s is%s: %s%.2f%s" % \
+					(RED_TEXT if found else GREEN_TEXT,\
+					exchange_symbol, " not" if found else "", region_symbol, guess,
+					END_COLOR))
 			if (found == 0):
 				print("This program took %d guesses to determine the exchange rate!" % (numGuesses,))
 				exit(0)
+			if (not args.nodelay):
+				for i in range(random.randint(1,20)):
+					print(".", end='', flush=True)
+					time.sleep(.1)
+				print("")
+
 		else:
 			print("Sorry, %s is not within the provided price range" % (exchange_symbol,))
 			exit(1)
