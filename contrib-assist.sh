@@ -22,10 +22,11 @@ manage_make () {
 # Function to create or edit a README.md
 manage_readme () {
 	ls README.md > /dev/null &> /dev/null
-	if [[ $? == 2 ]]; then
+	if [[ $? != 0 ]]; then
 		echo "# $1" > README.md
-		"${EDITOR:-vi}" README.md
+		echo "" >> README.md
 	fi
+	"${EDITOR:-vi}" README.md
 }
 
 
@@ -40,6 +41,7 @@ get_type () {
 	echo "You may also specify an option not listed to create that directory"
 	while ( true ); do
 		read program_type
+		program_type=$(echo $program_type|awk '{gsub(/ /,"-")}1')
 		if [ -z $program_type ]; then
 			echo "Please enter a program type:"
 			continue
@@ -64,7 +66,7 @@ get_type () {
 			elif [ ${resp,,} == "n" ] || [ ${resp,,} == "no" ]; then
 				return 1
 			else
-				echo ${resp,,} "is not a valid response. Please select from (yes,y,no,n):"
+				echo ${resp,,} "is not a valid response. Please select from {yes,y,no,n}:"
 				continue
 			fi
 		done
@@ -77,7 +79,7 @@ get_type () {
 			elif [ ${resp,,} == "n" ] || [ ${resp,,} == "no" ]; then
 				return 1
 			else
-				echo ${resp,,} "is not a valid response. Please select from (yes,y,no,n):"
+				echo ${resp,,} "is not a valid response. Please select from {yes,y,no,n}:"
 				continue
 			fi
 		done
@@ -91,6 +93,7 @@ get_name () {
 	echo "Enter the name of the program:"
 	while ( true ); do
 		read program_name
+		program_name=$(echo $program_name|awk '{gsub(/ /,"-")}1')
 		if [ -z $program_name ]; then
 			echo "Please enter a program name:"
 			continue
@@ -153,10 +156,32 @@ main () {
 			git checkout -b $program_name
 			git add ../$program_name ../../$program_type
 			git commit -m "Initial commit for branch $program_name"
+			echo "Push to Github? (y/n)"
+			while (true); do
+				read resp
+				if [ ${resp,,} == "y" ] ||  [ ${resp,,} == "yes" ]; then
+					git push --set-upstream origin $program_name && git push
+					break
+				elif [ ${resp,,} == "n" ] || [ ${resp,,} == "no" ]; then
+					break
+				else
+					echo ${resp,,} "is not a valid response. Please select from {yes,y,no,n}:"
+					continue
+				fi
+			done
+			GIT_REPO="https://github.com/RSAkidinUSA/shellanigans"
 		else
 			# do a fork
-			echo $program_type|rev"/"$program_name|rev
+			git fork
+			GIT_REPO="https://github.com/"$ID"/shellanigans"
 		fi
+
+		# Further instructions
+		echo "Congratulations! You're ready to go!"
+		echo "Make any changes you want, commit them with good messages!"
+		echo "Don't forget to push those changes too!"
+		echo "When you're ready to get your changes added, head to" $GIT_REPO "and make a pull request!"
+		echo "For more help with git, checkout the git_help.md!"\
 	fi
 }
 
