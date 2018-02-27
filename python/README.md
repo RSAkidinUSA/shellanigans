@@ -12,3 +12,7 @@ cryptocheck.py
 	*TODO*
 	Add other crypto currencies
 	Add arguments such as range
+
+color-bomb.py
+	Makes your terminal have lots of fun colors
+	Use Ctrl+D to exit and restore the correct settings!
