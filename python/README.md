@@ -16,3 +16,5 @@ cryptocheck.py
 color-bomb.py
 	Makes your terminal have lots of fun colors
 	Use Ctrl+D to exit and restore the correct settings!
+	Currently works on windows (kinda), and unix!
+	Requires the python module psutil (pip3 install psutil)
